@@ -1,0 +1,4 @@
+<resources>
+  <string name="app_name">Pix A Lot</string>
+  <string name="error_cannot_fetch">Sorry! Unable to fetch images</string>
+</resources>

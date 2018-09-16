@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  tools:context=".screen.home.HomeActivity"
+  app:startDestination="@id/photoListPage">
+
+  <fragment
+    android:id="@+id/photoListPage"
+    android:name=".screen.home.photolist.PhotoListPage"
+    tools:layout="@layout/fragment_photo_list">
+    <action
+      android:id="@+id/actionGoToViewPhotoPage"
+      app:destination="@id/viewPhotoPage"/>
+  </fragment>
+
+  <fragment
+    android:id="@+id/viewPhotoPage"
+    android:name=".screen.home.viewphoto.ViewPhotoPage"
+    tools:layout="@layout/fragment_view_photo">
+  </fragment>
+
+</navigation>

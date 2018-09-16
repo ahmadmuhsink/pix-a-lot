@@ -1,0 +1,21 @@
+<resources>
+
+  <style name="PixALotTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="colorPrimary">@color/gainsboro</item>
+    <item name="colorPrimaryDark">@color/fireRed</item>
+    <item name="colorAccent">@color/brickRed</item>
+  </style>
+
+  <style name="PixALotProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">4dp</item>
+    <item name="android:indeterminate">true</item>
+    <item name="android:scaleY">5</item>
+  </style>
+
+  <style name="PixALotProgressBar.Thin">
+    <item name="android:layout_height">16dp</item>
+    <item name="android:scaleY">1</item>
+  </style>
+
+</resources>
