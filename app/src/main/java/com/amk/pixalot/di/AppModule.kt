@@ -1,9 +1,12 @@
 package com.amk.pixalot.di
 
+import com.amk.pixalot.domain.network.pexel.PexelApi
+import com.amk.pixalot.domain.network.pexel.PexelConfig.PEXEL_URL
 import com.amk.pixalot.domain.network.pixabay.PixabayApi
 import com.amk.pixalot.domain.network.pixabay.PixabayConfig.PIXABAY_URL
 import com.amk.pixalot.domain.network.unsplash.UnsplashApi
 import com.amk.pixalot.domain.network.unsplash.UnsplashConfig.UNSPLASH_URL
+import com.amk.pixalot.domain.repo.PexelRepository
 import com.amk.pixalot.domain.repo.PixabayRepository
 import com.amk.pixalot.domain.repo.UnsplashRepository
 import com.amk.pixalot.domain.store.PhotoListStore
@@ -21,16 +24,18 @@ val networkModule = module {
     single { createOkHttpClient() }
     single { createWebService<PixabayApi>(get(), PIXABAY_URL) }
     single { createWebService<UnsplashApi>(get(), UNSPLASH_URL) }
+    single { createWebService<PexelApi>(get(), PEXEL_URL) }
 }
 
 val sourceModule = module {
     single { PixabayRepository(get()) }
     single { UnsplashRepository(get()) }
+    single { PexelRepository(get()) }
 }
 
 val photoListModule = module {
     factory { PhotoListStore() }
-    factory { PhotoListWorkflow(get(), get(), get()) }
+    factory { PhotoListWorkflow(get(), get(), get(), get()) }
     factory<PhotoListContract.Presenter> { PhotoListPresenter(get()) }
 }
 

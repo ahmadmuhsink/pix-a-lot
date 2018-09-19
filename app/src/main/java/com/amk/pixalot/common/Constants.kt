@@ -7,5 +7,5 @@ object AppConfig {
 
 object ApiConfig {
     const val SEARCH_QUERY = "cat"
-    const val PER_PAGE_CONFIG = 8
+    const val PER_PAGE_CONFIG = 5
 }

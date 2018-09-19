@@ -1,6 +1,7 @@
 package com.amk.pixalot.domain.workflow
 
 import com.amk.pixalot.common.RxImmediateSchedulerRule
+import com.amk.pixalot.domain.repo.PexelRepository
 import com.amk.pixalot.domain.repo.PixabayRepository
 import com.amk.pixalot.domain.repo.UnsplashRepository
 import com.amk.pixalot.domain.store.PhotoListStore
@@ -28,11 +29,14 @@ class PhotoListWorkflowTest {
     @Mock
     private lateinit var pixabayRepo: PixabayRepository
 
+    @Mock
+    private lateinit var pexelRepo: PexelRepository
+
     private lateinit var workflow: PhotoListWorkflow
 
     @Before
     fun setup() {
-        workflow = PhotoListWorkflow(pixabayRepo, unsplashRepo, PhotoListStore())
+        workflow = PhotoListWorkflow(pixabayRepo, unsplashRepo, pexelRepo, PhotoListStore())
     }
 
     @Test
@@ -51,15 +55,23 @@ class PhotoListWorkflowTest {
             )
         }
 
+        val expectedPexel = (11..15).map { index ->
+            ImageItem(
+                    "#$index preview url",
+                    "#$index full url"
+            )
+        }
+
         `when`(pixabayRepo.fetchImages(1)).thenReturn(Observable.just(expectedPixa))
         `when`(unsplashRepo.fetchImages(1)).thenReturn(Observable.just(expectedUnsplash))
+        `when`(pexelRepo.fetchImages(1)).thenReturn(Observable.just(expectedPexel))
 
-        val expected = PhotoListViewModel(expectedPixa + expectedUnsplash)
+        val expected = PhotoListViewModel(expectedPixa + expectedUnsplash + expectedPexel)
 
         workflow.load()
                 .test()
                 .assertValueCount(1)
-                .assertValue { it.images.size == 10 }
+                .assertValue { it.images.size == 15 }
                 .assertResult(expected)
     }
 
@@ -79,15 +91,23 @@ class PhotoListWorkflowTest {
             )
         }
 
+        val expectedPexel = (11..15).map { index ->
+            ImageItem(
+                    "#$index preview url",
+                    "#$index full url"
+            )
+        }
+
         `when`(pixabayRepo.loadMore()).thenReturn(Observable.just(expectedPixa))
         `when`(unsplashRepo.loadMore()).thenReturn(Observable.just(expectedUnsplash))
+        `when`(pexelRepo.loadMore()).thenReturn(Observable.just(expectedPexel))
 
-        val expected = PhotoListViewModel(expectedPixa + expectedUnsplash)
+        val expected = PhotoListViewModel(expectedPixa + expectedUnsplash + expectedPexel)
 
         workflow.loadMore()
                 .test()
                 .assertValueCount(1)
-                .assertValue { it.images.size == 10 }
+                .assertValue { it.images.size == 15 }
                 .assertResult(expected)
     }
 }
