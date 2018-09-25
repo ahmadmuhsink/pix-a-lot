@@ -11,7 +11,7 @@ class PhotoListStore {
 
     private var state = State()
 
-    val currentImages: List<ImageItem>
+    val currentImages: ArrayList<ImageItem>
         get() = state.images
 
     fun update(images: List<ImageItem>): PhotoListViewModel {
