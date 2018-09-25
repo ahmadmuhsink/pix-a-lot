@@ -6,9 +6,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers.io
 
-open class PixabayRepository(private val pixabayApi: PixabayApi) : ImageSourceRepo {
-
-    private var currentPage: Int = 1
+open class PixabayRepository(private val pixabayApi: PixabayApi) : BaseImageRepo() {
 
     override fun fetchImages(page: Int): Observable<List<ImageItem>> = pixabayApi
             .getImages(page = page).map { images ->
@@ -22,8 +20,4 @@ open class PixabayRepository(private val pixabayApi: PixabayApi) : ImageSourceRe
             }
             .subscribeOn(io())
             .observeOn(AndroidSchedulers.mainThread())
-
-    override fun loadMore(): Observable<List<ImageItem>> {
-        return fetchImages(currentPage.inc()).doOnNext { currentPage = currentPage.inc() }
-    }
 }
