@@ -101,6 +101,9 @@ class PhotoListWorkflowTest {
             )
         }
 
+        `when`(pixabayRepo.fetchImages(1)).thenReturn(Observable.just(expectedPixa))
+        `when`(unsplashRepo.fetchImages(1)).thenReturn(Observable.just(expectedUnsplash))
+        `when`(pexelRepo.fetchImages(1)).thenReturn(Observable.just(expectedPexel))
         `when`(pixabayRepo.loadMore()).thenReturn(Observable.just(expectedPixa))
         `when`(unsplashRepo.loadMore()).thenReturn(Observable.just(expectedUnsplash))
         `when`(pexelRepo.loadMore()).thenReturn(Observable.just(expectedPexel))

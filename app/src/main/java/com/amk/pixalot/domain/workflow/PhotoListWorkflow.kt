@@ -1,13 +1,13 @@
 package com.amk.pixalot.domain.workflow
 
-import com.amk.pixalot.domain.repo.ImageSourceRepo
+import com.amk.pixalot.domain.repo.BaseImageRepo
 import com.amk.pixalot.domain.store.PhotoListStore
 import com.amk.pixalot.domain.viewmodel.ImageItem
 import com.amk.pixalot.screen.home.photolist.PhotoListViewModel
 import io.reactivex.Observable
 
 open class PhotoListWorkflow(
-        private val repos: List<ImageSourceRepo>,
+        private val repos: List<BaseImageRepo>,
         private val store: PhotoListStore
 ) {
     private fun zipper(data: Array<Any>): List<ImageItem> =
@@ -23,7 +23,7 @@ open class PhotoListWorkflow(
     fun loadMore(): Observable<PhotoListViewModel> = fetchAll({ loadMore() }, { add(it) })
 
     private inline fun fetchAll(
-            fetch: ImageSourceRepo.() -> Observable<List<ImageItem>>,
+            fetch: BaseImageRepo.() -> Observable<List<ImageItem>>,
             crossinline storeOperation: PhotoListStore.(List<ImageItem>) -> PhotoListViewModel
     ): Observable<PhotoListViewModel> {
         return Observable
