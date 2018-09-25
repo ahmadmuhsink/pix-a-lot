@@ -35,7 +35,16 @@ val sourceModule = module {
 
 val photoListModule = module {
     factory { PhotoListStore() }
-    factory { PhotoListWorkflow(get(), get(), get(), get()) }
+    factory {
+        PhotoListWorkflow(
+                listOf(
+                        get<PixabayRepository>(),
+                        get<UnsplashRepository>(),
+                        get<PexelRepository>()
+                ),
+                get()
+        )
+    }
     factory<PhotoListContract.Presenter> { PhotoListPresenter(get()) }
 }
 

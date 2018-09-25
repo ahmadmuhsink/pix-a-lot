@@ -36,7 +36,10 @@ class PhotoListWorkflowTest {
 
     @Before
     fun setup() {
-        workflow = PhotoListWorkflow(pixabayRepo, unsplashRepo, pexelRepo, PhotoListStore())
+        workflow = PhotoListWorkflow(
+                listOf(pixabayRepo, unsplashRepo, pexelRepo),
+                PhotoListStore()
+        )
     }
 
     @Test

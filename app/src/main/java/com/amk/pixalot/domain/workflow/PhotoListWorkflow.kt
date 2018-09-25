@@ -1,50 +1,33 @@
 package com.amk.pixalot.domain.workflow
 
-import com.amk.pixalot.domain.repo.PexelRepository
-import com.amk.pixalot.domain.repo.PixabayRepository
-import com.amk.pixalot.domain.repo.UnsplashRepository
+import com.amk.pixalot.domain.repo.ImageSourceRepo
 import com.amk.pixalot.domain.store.PhotoListStore
 import com.amk.pixalot.domain.viewmodel.ImageItem
 import com.amk.pixalot.screen.home.photolist.PhotoListViewModel
 import io.reactivex.Observable
-import io.reactivex.functions.Function3
 
 open class PhotoListWorkflow(
-        private val pixabayRepository: PixabayRepository,
-        private val unsplashRepository: UnsplashRepository,
-        private val pexelRepository: PexelRepository,
+        private val repos: List<ImageSourceRepo>,
         private val store: PhotoListStore
 ) {
-
-    private val zipper by lazy {
-        Function3<List<ImageItem>, List<ImageItem>, List<ImageItem>, List<ImageItem>> { pixabay, unsplash, pexel ->
-            pixabay + unsplash + pexel
-        }
-    }
+    private fun zipper(data: Array<Any>): List<ImageItem> =
+            data.map { it as List<ImageItem> }.flatten()
 
     fun load(): Observable<PhotoListViewModel> {
         return if (store.currentImages.isNotEmpty())
             Observable.just(store.deriveViewModel())
         else
-            Observable.zip(
-                    fetchImages { pixabayRepository.fetchImages(1) },
-                    fetchImages { unsplashRepository.fetchImages(1) },
-                    fetchImages { pexelRepository.fetchImages(1) },
-                    zipper
-            ).map { store.update(it) }
+            fetchAll({ fetchImages(1) }, { update(it) })
     }
 
-    fun loadMore(): Observable<PhotoListViewModel> {
-        return Observable.zip(
-                fetchImages { pixabayRepository.loadMore() },
-                fetchImages { unsplashRepository.loadMore() },
-                fetchImages { pexelRepository.loadMore() },
-                zipper
-        ).map { store.add(it) }
-    }
+    fun loadMore(): Observable<PhotoListViewModel> = fetchAll({ loadMore() }, { add(it) })
 
-    private fun fetchImages(
-            fetch: () -> Observable<List<ImageItem>>
-    ): Observable<List<ImageItem>> = fetch()
-            .onErrorResumeNext(Observable.just(listOf()))
+    private inline fun fetchAll(
+            fetch: ImageSourceRepo.() -> Observable<List<ImageItem>>,
+            crossinline storeOperation: PhotoListStore.(List<ImageItem>) -> PhotoListViewModel
+    ): Observable<PhotoListViewModel> {
+        return Observable
+                .zip(repos.map { fetch(it).onErrorResumeNext(Observable.just(listOf())) }, ::zipper)
+                .map { storeOperation(store, it) }
+    }
 }
