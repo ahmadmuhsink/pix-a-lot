@@ -7,7 +7,7 @@
 
   <fragment
     android:id="@+id/photoListPage"
-    android:name=".screen.home.photolist.PhotoListPage"
+    android:name="com.amk.pixalot.screen.home.photolist.PhotoListPage"
     tools:layout="@layout/fragment_photo_list">
     <action
       android:id="@+id/actionGoToViewPhotoPage"
@@ -16,7 +16,7 @@
 
   <fragment
     android:id="@+id/viewPhotoPage"
-    android:name=".screen.home.viewphoto.ViewPhotoPage"
+    android:name="com.amk.pixalot.screen.home.viewphoto.ViewPhotoPage"
     tools:layout="@layout/fragment_view_photo">
   </fragment>
 
